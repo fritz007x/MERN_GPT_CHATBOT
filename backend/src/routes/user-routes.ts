@@ -9,8 +9,8 @@ import {
   loginValidator,
   signupValidator,
   validate,
-} from "../utils/finalvalidators.js";
-import { verifyToken } from "../utils/token-managerfinal.js";
+} from "../utils/validators.js";
+import { verifyToken } from "../utils/token-manager.js";
 
 const userRoutes = Router();
 userRoutes.get("/", getAllUsers);

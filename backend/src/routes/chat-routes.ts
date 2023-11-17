@@ -1,7 +1,7 @@
 import { Router } from "express";
-import User from "../models/User.js";
+import { verifyToken } from "../utils/token-manager.js";
 
 const chatRoutes = Router();
-chatRoutes.post("/new", userVerify);
+chatRoutes.post("/new", verifyToken);
 
 export default chatRoutes;
