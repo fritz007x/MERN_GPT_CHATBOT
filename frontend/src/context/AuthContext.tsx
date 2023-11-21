@@ -8,6 +8,8 @@ import {
 import {
   checkAuthStatus,
   loginUser,
+  //  logoutUser,
+  //  signupUser
 } from "../components/helpers/api-communicator";
 
 type User = {
@@ -31,7 +33,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     //fetch if the user cookies are valid, then skip the login
     async function checkStatus() {
-      const data = checkAuthStatus();
+      const data = await checkAuthStatus();
       if (data) {
         setUser({ email: data.email, name: data.name });
         setIsLoggedIn(true);
@@ -39,14 +41,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
     checkStatus();
   }, []);
-  const login = async (email: string, password: string) => {
+  const login = async function login(email: string, password: string) {
     const data = await loginUser(email, password);
     if (data) {
       setUser({ email: data.email, name: data.name });
       setIsLoggedIn(true);
     }
   };
-  const logout = async (email: string, password: string) => {};
+  const logout = async () => {};
   const signup = async () => {};
 
   const value = {
@@ -59,4 +61,4 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
-export const UseAuth = () => useContext(AuthContext);
+export const useAuth = () => useContext(AuthContext);
