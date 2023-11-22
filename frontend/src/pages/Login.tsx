@@ -3,10 +3,10 @@ import { Box, Typography, Button } from "@mui/material";
 import { IoIosLogIn } from "react-icons/io";
 import CustomizedInput from "../components/shared/CustomizedInput";
 import { toast } from "react-hot-toast";
-import { UseAuth } from "../context/AuthContext";
+import { useAuth } from "../context/AuthContext";
 
 const Login = () => {
-  const auth = UseAuth();
+  const auth = useAuth();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

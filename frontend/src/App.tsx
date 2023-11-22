@@ -9,11 +9,12 @@ import Signup from "./pages/Signup";
 import Chat from "./pages/Chat";
 import NotFound from "./pages/NotFound";
 import Header from "./components/Header";
-import { UseAuth } from "./context/AuthContext";
+import { useAuth } from "./context/AuthContext";
 
 function App() {
+  // const auth = useAuth();
   // const [count, setCount] = useState(0)
-  console.log("Is it logged:", UseAuth()?.isLoggedIn);
+  console.log("Is it logged:", useAuth()?.isLoggedIn);
   return (
     <main>
       <Header />
