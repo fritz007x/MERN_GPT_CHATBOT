@@ -1,10 +1,8 @@
 import { Request, Response, NextFunction } from "express";
 import User from "../models/User.js";
 import { hash, compare } from "bcrypt";
-import { create } from "domain";
 import { createToken } from "../utils/token-manager.js";
 import { COOKIE_NAME } from "../utils/constants.js";
-// import { error } from "console";
 
 export const getAllUsers = async (
   req: Request,
@@ -17,7 +15,7 @@ export const getAllUsers = async (
     return res.status(200).json({ message: "Ok", users });
   } catch (error) {
     console.log(error);
-    return res.status(404).json({ message: "Error", cause: error.message });
+    return res.status(500).json({ message: "Error", cause: error.message }); //status changed to 500
   }
 };
 
