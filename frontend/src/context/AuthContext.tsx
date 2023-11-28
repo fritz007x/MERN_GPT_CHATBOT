@@ -8,8 +8,8 @@ import {
 import {
   checkAuthStatus,
   loginUser,
-  //  logoutUser,
-  //  signupUser
+  logoutUser,
+  signupUser,
 } from "../components/helpers/api-communicator";
 
 type User = {
@@ -28,7 +28,7 @@ type UserAuth = {
 const AuthContext = createContext<UserAuth | null>(null);
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
     //fetch if the user cookies are valid, then skip the login
@@ -41,15 +41,26 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
     checkStatus();
   }, []);
-  const login = async function login(email: string, password: string) {
+  const login = async (email: string, password: string) => {
     const data = await loginUser(email, password);
     if (data) {
       setUser({ email: data.email, name: data.name });
       setIsLoggedIn(true);
     }
   };
-  const logout = async () => {};
-  const signup = async () => {};
+  const logout = async () => {
+    await logoutUser();
+    setIsLoggedIn(false);
+    setUser(null);
+    window.location.reload();
+  };
+  const signup = async (name: string, email: string, password: string) => {
+    const data = await signupUser(name, email, password);
+    if (data) {
+      setUser({ email: data.email, name: data.name });
+      setIsLoggedIn(true);
+    }
+  };
 
   const value = {
     user,

@@ -3,6 +3,7 @@ import {
   getAllUsers,
   userSignUp,
   userLogin,
+  userLogout,
   userVerify,
 } from "../controllers/user-controllers.js";
 import {
@@ -16,6 +17,8 @@ const userRoutes = Router();
 userRoutes.get("/", getAllUsers);
 userRoutes.post("/signUp", validate(signupValidator), userSignUp);
 userRoutes.post("/login", validate(loginValidator), userLogin);
+userRoutes.get("/logout", verifyToken, userLogout);
+
 userRoutes.get("/auth-status", verifyToken, userVerify);
 
 export default userRoutes;
