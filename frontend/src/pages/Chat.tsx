@@ -1,10 +1,16 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Avatar, Box, Button, IconButton, Typography } from "@mui/material";
 import { red } from "@mui/material/colors";
 import { useAuth } from "../context/AuthContext";
 import { IoMdSend } from "react-icons/io";
 import ChatItem from "../components/chat/ChatItem";
-import { sendChatRequest } from "../components/helpers/api-communicator";
+import {
+  deleteUserChats,
+  getUserChats,
+  sendChatRequest,
+} from "../components/helpers/api-communicator";
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 type Message = {
   role: "user" | "assistant";
@@ -12,6 +18,7 @@ type Message = {
 };
 
 const Chat = () => {
+  const navigate = useNavigate();
   const inputRef = useRef<HTMLInputElement | null>(null);
   const auth = useAuth();
   const [chatMessages, setChatMessages] = useState<Message[]>([]);
@@ -25,6 +32,39 @@ const Chat = () => {
     const chatData = await sendChatRequest(content);
     setChatMessages([...chatData.chats]);
   };
+
+  const handleDeleteChats = async () => {
+    try {
+      toast.loading("Deleting chats", { id: "deletechats" });
+      await deleteUserChats();
+      setChatMessages([]);
+      toast.success("Deleted chats successfully", { id: "deletechats" });
+    } catch (error) {
+      console.log(error);
+      toast.error("Deleting chats failed", { id: "deletechats" });
+    }
+  };
+
+  useLayoutEffect(() => {
+    if (auth?.isLoggedIn && auth.user) {
+      toast.loading("Loading Chats", { id: "loadchats" });
+      getUserChats()
+        .then((data) => {
+          setChatMessages([...data.chats]);
+          toast.success("Succefully loaded chats", { id: "loadchats" });
+        })
+        .catch((err) => {
+          console.log(err);
+          toast.error("Loading Failed", { id: "loadchats" });
+        });
+    }
+  }, [auth]);
+  useEffect(() => {
+    if (!auth?.user) {
+      return navigate("/login");
+    }
+  }, [auth]);
+
   return (
     <Box
       sx={{
@@ -64,7 +104,7 @@ const Chat = () => {
             }}
           >
             {auth?.user?.name[0]}
-            {auth?.user?.name.split(" ")[1][0]}
+            {/* {auth?.user?.name.split(" ")[1][0]} */}
           </Avatar>
           <Typography sx={{ mx: "auto", fontFamily: "work sans" }}>
             You are talking to a Chatbot
@@ -73,6 +113,7 @@ const Chat = () => {
             You can ask questions, but avoid sharing personal information.
           </Typography>
           <Button
+            onClick={handleDeleteChats}
             sx={{
               width: "200px",
               my: "auto",
